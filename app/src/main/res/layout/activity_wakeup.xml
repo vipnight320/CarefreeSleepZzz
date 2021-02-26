@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Wakeup"
+    android:background="#b79b5b">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        android:gravity="bottom">
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:text="この画面はDBがうまく機能しないのと時刻データがnullで全部送信され何も動かないただいらないprogramになったんで開発中止にしました 　:("
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:layout_marginLeft="10dp"
+            android:id="@+id/buckfromincursedprogram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="戻る"/>
+    </LinearLayout>
+
+    <!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/showHour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="70dp"
+                android:textColor="@color/lightgray"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="70dp"
+                android:text=":"
+                android:textColor="@color/lightgray"
+                />
+            <TextView
+                android:id="@+id/showMinute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="70dp"
+                android:textColor="@color/lightgray"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+            <Button
+                android:id="@+id/addAlarm"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:background="@drawable/shape_purple"
+                android:text="@string/add_time" />
+        </LinearLayout>-->
+
+        <!--いずれ何かで使いたいのでコメントアウト
+        <TimePicker
+            android:layout_marginTop="10dp"
+            android:id="@+id/time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:headerBackground="#987777" />-->
+
+        <!--下のボタン3つのレイアウト-->
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_marginBottom="15dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/bt_mainmenu"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="110dp"
+                    android:background="@drawable/shape_purple"
+                    android:layout_height="match_parent"
+                    android:text="@string/main" />
+
+                <Button
+                    android:id="@+id/bt_sleep"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_purple"
+                    android:text="@string/sleep" />
+
+                <Button
+                    android:id="@+id/bt_configs"
+                    android:layout_width="110dp"
+                    android:background="@drawable/shape_purple"
+                    android:layout_height="match_parent"
+                    android:text="@string/config" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>-->
+
+</android.support.constraint.ConstraintLayout>

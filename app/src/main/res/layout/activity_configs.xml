@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#b79b5b">
+
+    <!--ここがcenter_horizontalでまっすぐになるのが謎-->
+
+    <!--内容うまくまとまんないんで開発中止にしました
+    　　 souce codeは残します
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:id="@+id/scrollView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="left"
+        android:layout_marginLeft="40dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/Config1"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp"
+                android:textSize="20sp"
+                android:background="#f5f5f5"
+                android:gravity="center|left"
+                android:text="@string/conf1"/>
+            <Button
+                android:id="@+id/btConfig2"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp" />
+            <Button
+                android:id="@+id/btConfig3"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp" />
+            <Button
+                android:id="@+id/bt_config4"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp" />
+            <Button
+                android:id="@+id/bt_config5"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp" />
+            <Button
+                android:id="@+id/bt_config6"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="60dp" />
+            <Button
+                android:id="@+id/bt_config7"
+                android:layout_marginTop="5dp"
+                android:layout_width="240dp"
+                android:layout_height="70dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+    s-下のボタン3つのレイアウト-->
+
+    <!--1つ目のlinerlayoutは画面一番下に配置する用
+           2つ目のlinerlayoutはボタンのサイズ指定と、その領域を中央に持ってくる用
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+        android:gravity="bottom">
+        <TextView
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="この画面は内容がうまく作れないんで開発中止にしました 　:("
+        tools:ignore="MissingConstraints" />
+
+        <Button
+            android:layout_marginLeft="10dp"
+            android:id="@+id/buckfromincursedprogram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="戻る"/>
+    </LinearLayout>
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_marginBottom="15dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            >
+
+            <Button
+                android:id="@+id/bt_mainmenu"
+                android:layout_marginRight="5dp"
+                android:layout_width="110dp"
+                android:background="@drawable/shape_purple"
+                android:layout_height="match_parent"
+                android:text="@string/main" />
+
+            <Button
+                android:id="@+id/bt_sleep"
+                android:layout_marginRight="5dp"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_purple"
+                android:text="@string/sleep" />
+
+            <Button
+                android:id="@+id/bt_configs"
+                android:layout_width="110dp"
+                android:background="@drawable/shape_purple"
+                android:layout_height="match_parent"
+                android:text="@string/wakeup" />
+
+        </LinearLayout>
+
+    </LinearLayout>-->
+    
+</android.support.constraint.ConstraintLayout>

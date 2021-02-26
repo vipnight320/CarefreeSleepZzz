@@ -1,0 +1,306 @@
+package com.example.j329.carefreesleepzzz;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.os.Handler;
+import android.provider.AlarmClock;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.Toolbar;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+public class Wakeup extends AppCompatActivity {
+
+    //アラームの主キーとなる部分 db用変数名と被りを回避するため_を挿入
+    int _alarmId = -1;
+    //時間をデータベースに保存するための初期宣言
+    int _hour;
+    int _min;
+
+    //int note;
+    //int note1;
+
+    String note;
+    String note1;
+
+    private Handler handler = new Handler();
+
+    //DatabaseHelper helper = new DatabaseHelper(Wakeup.this);
+    //public SQLiteDatabase db; //privateって付けたら動くマジックない？
+
+    //AlarmManager am;
+
+    //ここで時刻設定時が明日だったらっていうif書くための計算比較用変数を代入
+    Date nowtime = new Date();
+
+    SimpleDateFormat ny = new SimpleDateFormat( "YY" );
+    String nyy = ny.format( nowtime );
+    int year = Integer.parseInt(nyy);
+
+    SimpleDateFormat nm = new SimpleDateFormat( "MM" );
+    String nma = nm.format( nowtime );
+    int mon = Integer.parseInt(nma);
+
+    SimpleDateFormat nd = new SimpleDateFormat( "dd" );
+    String ndd = nd.format( nowtime );
+    int day = Integer.parseInt(ndd);
+
+    //int sendhour;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_wakeup);
+
+        //アラームマネージャーの用意
+        //AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+        //ここからDB関連?ほぼ教科書参考～
+        DatabaseHelper helper = new DatabaseHelper(Wakeup.this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        //dbに時刻が存在していたら中身を表示
+        /*if(db != null) {
+            //_id = +のとこからどうなってんのかわからん 主キーからNO検索してるだけなら_idだけでよくない？
+            try {*/
+                String sql = "SELECT * FROM alarmdata WHERE _id = " + _alarmId;
+                Cursor cursor = db.rawQuery(sql, null);
+                //データベースから取得した値を格納する変数を宣言。データがなかった時のための初期値も宣言
+
+                //教科書p247参考
+                //cursor.moveToNext();
+                while (cursor.moveToNext()) {
+                    int idxNote = cursor.getColumnIndex("hour");
+                    int idxNote1 = cursor.getColumnIndex("min");
+                    //int型で時間de-taを格納
+                    //note = cursor.getInt(idxNote);
+                    //note1 = cursor.getInt(idxNote1);
+                    note = cursor.getString(idxNote);
+                    note1 = cursor.getString(idxNote1);
+                }
+                /*kokokara TextView showtime = findViewById(R.id.showHour);
+                TextView showtime1 = findViewById(R.id.showMinute);
+                showtime.setText(String.valueOf(note));
+                showtime1.setText(String.valueOf(note1));
+            //}finally {
+                db.close();
+            //}
+        //}*/
+
+        //機能性を持つという意味でfunclisntener
+        Wakeup.FuncListener funcListener = new Wakeup.FuncListener();
+        Button AddAlarm = findViewById(R.id.addAlarm);
+        AddAlarm.setOnClickListener(funcListener);
+
+        Wakeup.HelloListener listener = new Wakeup.HelloListener();
+
+        Button bt_sleep = findViewById(R.id.bt_sleep); //ここでスリープボタンに遷移するリスナーを記述
+        bt_sleep.setOnClickListener(listener);
+
+        Button bt_mainmenu = findViewById(R.id.bt_mainmenu);//起きるボタンが押された時の処理
+        bt_mainmenu.setOnClickListener(listener);
+
+        Button bt_configs = findViewById(R.id.bt_configs);//設定ボタンが押された時の処理
+        bt_configs.setOnClickListener(listener);
+    }
+
+    private class FuncListener implements View.OnClickListener{
+       @Override
+       //目覚まし追加が押された時に動くリスナー
+        public void onClick(View view){ //ここにalarmのdialogとgui or edit text,list?を作ってdbに落とし込む
+           //カレンダーから時刻のインスタンスを取得 (localtimeかどうかは知らん)
+           final Calendar calendar = Calendar.getInstance();
+
+           /*int mon= calendar.get(Calendar.MONTH);
+           int day = calendar.get(Calendar.DAY_OF_MONTH);*/
+           int hour = calendar.get(Calendar.HOUR_OF_DAY);
+           int minute = calendar.get(Calendar.MINUTE);
+           /*TimePicker使うときのまとめ処理 これ全部ゴミ
+           // TimePickerインスタンスを取得
+           TimePicker timePicker = (TimePicker)findViewById(R.id.time_picker);
+           // 設定時刻の時間を取得
+           int whour = timePicker.getCurrentHour();
+
+            // 設定時刻の分を取得
+           int wmin = timePicker.getCurrentMinute();
+
+           // アラームを設定するインテントを取得する
+           Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);*/
+
+           TimePickerDialog dialog = new TimePickerDialog(
+                   Wakeup.this,
+                   new TimePickerDialog.OnTimeSetListener() {
+                       //ここでダイアログに時間データをしまってる
+                       @Override
+                       public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                           //完了を押したときの処理
+
+                           Log.d("test", String.format("%02d:%02d", hourOfDay, minute));
+                           _hour = hourOfDay; //ここでDB変数にデータを渡す？
+                           _min = minute;
+
+                           if (day + 1 == 1 && mon + 1 == 1) {//明日が年始めかつ月始めなら年,月を+
+                               mon++;
+                               year++;
+                           } else if (day + 1 == 1) {//明日が月初めなら月を+
+                               mon++;
+                           }
+
+                           /*kokokara calendar.set(year,mon,day,hourOfDay,minute);
+                           calendar.setTimeInMillis(System.currentTimeMillis());
+
+                           /*
+                           //設定時が現在時より小さい、または時間はいっしょで分が設定時の方が小さい時 → 明日判定
+                           if (nowhour > _hour || nowhour == _hour && nowminute > _min){
+                               sendhour = nowhour
+                           }
+                           calendar.add(Calendar.HOUR_OF_DAY, 5);*/
+
+                           Intent intent = new Intent(getApplicationContext(),
+                                   Mainmenu.class);
+                           PendingIntent pending = PendingIntent.getBroadcast(
+                                   getApplicationContext(), 0, intent, 0);
+                           // アラームをセットする
+                           AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                           if (am != null) {
+                           }
+                       }
+                   },
+                   hour,minute,true);
+                               /*kokokara am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending);
+
+                               Toast.makeText(getApplicationContext(),
+                                       "Set Alarm ", Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   },
+                   hour,minute,true);
+
+           dialog.show();
+
+           /*TimePicker使うときのまとめ処理
+           // アラーム時刻を設定する
+           intent.putExtra(AlarmClock.EXTRA_HOUR, whour);
+           intent.putExtra(AlarmClock.EXTRA_MINUTES, wmin);*/
+
+           /*kokokara TextView showtime = findViewById(R.id.showHour);
+           TextView showtime1 = findViewById(R.id.showMinute);
+
+
+           //showtime.setText(_hour);
+           //showtime1.setText(_min);
+
+           //https://stackoverflow.com/questions/60845980/timepickerdialog-in-android-and-add-to-database
+
+           //ここでDBに挿入するコード書くんかな知らんけど
+           //ここからDB関連?ほぼ教科書参考～
+           DatabaseHelper helper = new DatabaseHelper(Wakeup.this);
+           SQLiteDatabase db = helper.getWritableDatabase();
+
+           //try{
+               String sqlDelete = "DELETE From alarmdata WHERE _id = ?";
+               //まず最初に削除処理を行うその後挿入
+               SQLiteStatement stmt = db.compileStatement(sqlDelete);
+               //データ削除だけするので主キーのみ？
+               stmt.bindLong(1,_alarmId);
+
+               stmt.executeUpdateDelete();
+
+               //ここがデータベースに挿入する内容
+               String sqlInsert = "INSERT INTO alarmdata (_id, hour, min) VALUES(?, ?, ?)";
+               //上の文でコンパイルするためのプリステ
+               SQLiteStatement stmt1 = db.compileStatement(sqlInsert);
+               //stmt = db.compileStatement(sqlInsert);
+               //変数のバインド(SQL文に埋め込む変数)
+               stmt1.bindLong(1, _alarmId);
+               stmt1.bindLong(2, _hour);
+               stmt1.bindLong(3, _min);
+               //SQLをインサート
+               stmt1.executeInsert();
+
+               String show3 = "時刻をDBに挿入します";
+               Toast.makeText(Wakeup.this, show3, Toast.LENGTH_SHORT).show();
+
+               String sql = "SELECT * FROM alarmdata WHERE _id = " + _alarmId;
+               Cursor cursor = db.rawQuery(sql, null);
+               //データベースから取得した値を格納する変数を宣言。データがなかった時のための初期値も宣言
+
+               //教科書p247参考
+               //cursor.moveToNext();
+               while (cursor.moveToNext()) {
+                   int idxNote = cursor.getColumnIndex("hour");
+                   int idxNote1 = cursor.getColumnIndex("min");
+                   //note = cursor.getInt(idxNote);
+                   //note1 = cursor.getInt(idxNote1);
+                   note = cursor.getString(idxNote);
+                   note1 = cursor.getString(idxNote1);
+
+               }
+               showtime.setText(String.valueOf(note));
+               showtime1.setText(String.valueOf(note1));
+               /*showtime.setText(note);
+               showtime.setText(note1);*/
+
+               /*Toast.makeText(Wakeup.this, note, Toast.LENGTH_SHORT).show();
+               Toast.makeText(Wakeup.this, note1, Toast.LENGTH_SHORT).show();
+
+           /*kokokara showtime.setText(String.valueOf(_hour));
+           showtime1.setText(String.valueOf(_min));
+           /*}finally{
+           }*/
+           //db.close();
+
+           // インテントを発行する
+           //startActivity(intent);
+    /*   }
+    }*/
+
+    private class HelloListener implements View.OnClickListener { //ここでスリープボタン画面遷移のプログラム
+
+        @Override
+        public void onClick(View view) {
+
+            int id = view.getId();
+
+            switch (id) {
+                /*kokokaracase R.id.bt_mainmenu:
+                    finish();
+                    break;
+                case R.id.bt_sleep:
+                    finish();//一旦ここで前に開いていたActivityを(全て？)閉じて、新しいActivityを単一で？開けてるようにしてると思う それかただfinishが無視されてるだけか
+                    Intent intent2 = new Intent(Wakeup.this, Sleepchecker.class); //１個目は遷移元、２個目は遷移先
+                    startActivity(intent2);
+                    break;
+                case R.id.bt_configs:
+                    finish();
+                    Intent intent3 = new Intent(Wakeup.this, Configs.class); //１個目は遷移元、２個目は遷移先
+                    startActivity(intent3);
+                    break;*/
+            }
+        }
+    }
+    //全てのIOEをここに召喚
+    protected void onDestroy(){
+        //super.onDestroy();
+        // dog shit db.close();
+    }
+}
+    }
+}
